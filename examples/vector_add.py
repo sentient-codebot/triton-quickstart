@@ -78,12 +78,13 @@ def benchmark(size: int, provider: str) -> float:
         ms, min_ms, max_ms = triton.testing.do_bench(lambda: x + y, quantiles=quantiles)
     if provider == 'triton':
         ms, min_ms, max_ms = triton.testing.do_bench(lambda: add(x, y), quantiles=quantiles)
-    gbps = lambda ms: 3 * x.numel() * x.element_size() * 1e-9 / (ms + 1e-3)
+    gbps = lambda ms: 3 * x.numel() * x.element_size() * 1e-9 / (ms * 1e-3)
     # gbps: effective memory bandwidth = Total Bytes Moved / Total Time
     return gbps(ms), gbps(max_ms), gbps(min_ms)
 
 
 if __name__ == '__main__':
     # test()
-    benchmark.run(print_data=True, show_plots=True)
+    benchmark.run(print_data=True, show_plots=True, save_path='results/')
+    # show_plots (a pop-up window) won't work in ssh terminal
     pass
